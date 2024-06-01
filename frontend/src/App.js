@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import ClientList from './ClientList';
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    fetch("http://localhost:8000/message")
-      .then((res) => res.json())
-      .then((data) => setMessage(data.message));
-  }, []);
 
   return (
-    <div className="App">
-      <h1>{message}</h1>
+    <div>
+      <h1>Runn Client List</h1>
+        <ClientList />
     </div>
   );
 }
