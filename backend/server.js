@@ -2,14 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const dotenv = require('dotenv');
-<<<<<<< Updated upstream
-=======
 const { google } = require('googleapis');
 const fs = require('fs');
 const path = require('path');
 
 dotenv.config();
->>>>>>> Stashed changes
 
 const app = express();
 app.use(cors());
@@ -22,7 +19,7 @@ const TOKEN_PATH = 'token.json';
 const credentialsPath = path.join(__dirname, 'credentials.json');
 const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
 
-const { client_secret, client_id, redirect_uris } = credentials.installed;
+const { client_secret, client_id, redirect_uris } = credentials.web;
 const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
 // Check if we have previously stored a token.
@@ -86,29 +83,10 @@ app.get('/api/emails', async (req, res) => {
 
 // Existing routes
 app.get('/message', (req, res) => {
-    res.json({ message: "Hello from server!" });
+  res.json({ message: "Hello from server!" });
 });
 
 app.get('/api/clients', async (req, res) => {
-<<<<<<< Updated upstream
-    try {
-      const response = await axios.get('https://api.runn.io/clients', {
-        headers: {
-          Authorization: 'Bearer process.env.API_TOKEN',
-          'Accept-Version': '1.0.0'
-        }
-      });
-      res.json(response.data);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error fetching clients');
-    }
-  });
-
-app.listen(8000, () => {
-    console.log(`Server is running on port 8000.`);
-})
-=======
   try {
     const response = await axios.get('https://api.runn.io/clients', {
       headers: {
@@ -126,4 +104,4 @@ app.listen(8000, () => {
 app.listen(8000, () => {
   console.log(`Server is running on port 8000.`);
 });
->>>>>>> Stashed changes
+
