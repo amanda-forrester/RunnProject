@@ -61,7 +61,7 @@ async function getEmailContent(auth, messageId) {
   return res.data;
 }
 
-// Route to fetch Gmail messages
+//Route to fetch Gmail messages
 app.get('/api/emails', async (req, res) => {
   try {
     const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });

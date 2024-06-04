@@ -7,8 +7,7 @@ function App() {
 
   return (
     <div>
-      <h1>Runn Client List</h1>
-        <ClientList />
+      <h1>Time Off Requests</h1>
         <EmailList />
     </div>
   );
