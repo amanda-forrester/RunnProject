@@ -26,10 +26,7 @@ const EmailList = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-
-
   function findMatch(text) {
-    //const pattern = new RegExp(".{0,5}"+term+".{0,5}");
     const pattern = /(?:leave|time off)[^0-9]*(\d{4}-\d{1,2}-\d{1,2})(?:[^0-9]*to[^0-9]*(\d{4}-\d{1,2}-\d{1,2}))?/i;
     const match = pattern.exec(text);
     if (match) {
@@ -50,19 +47,21 @@ const EmailList = () => {
     return null;
   }
 
-
   return (
     <div>
       <h2>Emails</h2>
       <ul>
         {emails.map(email => {
-          const match = findMatch(email.snippet);
-          const person = findPersonID(email.snippet)
+          const snippet = email.snippet || 'No snippet available';
+          const match = findMatch(snippet);
+          const person = findPersonID(snippet);
+          const subject = email.payload?.headers?.find(header => header.name === 'Subject')?.value || 'No Subject';
+
           return (
             <li key={email.id} className="p-4">
-              <strong>Subject:</strong> {email.payload.headers.find(header => header.name === 'Subject')?.value || 'No Subject'}
+              <strong>Subject:</strong> {subject}
               <br />
-              <strong>Snippet:</strong> {email.snippet}
+              <strong>Snippet:</strong> {snippet}
               <br />
               <strong>Dates:</strong> {match ? `Start: ${match.startDate}, End: ${match.endDate}` : ''}
               <br />
@@ -76,7 +75,4 @@ const EmailList = () => {
   );
 };
 
-
 export default EmailList;
-
-//personID = 5e8hjnnk8

@@ -61,6 +61,21 @@ async function getEmailContent(auth, messageId) {
   return res.data;
 }
 
+// Route to fetch Gmail labels
+app.get('/api/labels', async (req, res) => {
+  try {
+    const gmail = google.gmail({ version: 'v1', auth: oAuth2Client });
+    const response = await gmail.users.labels.list({
+      userId: 'me',
+    });
+    res.json(response.data.labels);
+  } catch (error) {
+    console.error('Error fetching labels:', error);
+    res.status(500).send('Error fetching labels');
+  }
+});
+
+
 //Route to fetch Gmail messages
 app.get('/api/emails', async (req, res) => {
   try {
@@ -68,13 +83,26 @@ app.get('/api/emails', async (req, res) => {
     const response = await gmail.users.messages.list({
       userId: 'me',
       maxResults: 10,
+      labelIds: ['Label_1526526976139558814'],
     });
 
     const messages = response.data.messages || [];
     const emailPromises = messages.map(message => getEmailContent(oAuth2Client, message.id));
     const emailDetails = await Promise.all(emailPromises);
 
-    res.json(emailDetails);
+    const emailSnippets = emailDetails.map(email => ({
+      id: email.id,
+      subject: email.payload.headers.find(header => header.name === 'Subject')?.value || 'No Subject',
+      snippet: email.snippet,
+    }));
+
+    /*res.json(emailDetails);
+  } catch (error) {
+    console.error('Error fetching emails:', error);
+    res.status(500).send('Error fetching emails');
+  }*/
+
+  res.json(emailSnippets);
   } catch (error) {
     console.error('Error fetching emails:', error);
     res.status(500).send('Error fetching emails');
