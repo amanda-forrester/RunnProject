@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const ClientList = () => {
   const [clients, setClients] = useState([]);
@@ -9,8 +8,8 @@ const ClientList = () => {
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/clients');
-        setClients(response.data.values); // Accessing the 'values' key from the response
+        const response = await fetch('http://localhost:8000/api/clients').then(r => r.json());
+        setClients(response.values); // Accessing the 'values' key from the response
       } catch (error) {
         console.error('Error fetching clients:', error.response || error.message); // Log the exact error
         setError('Failed to fetch clients');

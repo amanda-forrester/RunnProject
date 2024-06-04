@@ -15,7 +15,7 @@ app.use(express.json());
 const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 const TOKEN_PATH = 'token.json';
 
-// Load client secrets from a local file.
+// Load client secrets
 const credentialsPath = path.join(__dirname, 'credentials.json');
 const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
 
@@ -43,7 +43,7 @@ app.get('/oauth2callback', (req, res) => {
   oAuth2Client.getToken(code, (err, token) => {
     if (err) return res.status(400).send('Error retrieving access token');
     oAuth2Client.setCredentials(token);
-    // Store the token to disk for later program executions
+    // Store token
     fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
       if (err) console.error(err);
     });
@@ -81,11 +81,7 @@ app.get('/api/emails', async (req, res) => {
   }
 });
 
-// Existing routes
-app.get('/message', (req, res) => {
-  res.json({ message: "Hello from server!" });
-});
-
+//Runn API
 app.get('/api/clients', async (req, res) => {
   try {
     const response = await axios.get('https://api.runn.io/clients', {
@@ -104,4 +100,5 @@ app.get('/api/clients', async (req, res) => {
 app.listen(8000, () => {
   console.log(`Server is running on port 8000.`);
 });
+
 
