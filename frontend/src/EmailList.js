@@ -1,4 +1,3 @@
-// src/components/EmailList.js
 import React, { useState, useEffect } from 'react';
 import DetailForm from './DetailForm';
 
@@ -26,7 +25,7 @@ const EmailList = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  function findMatch(text) {
+  function findDates(text) {
     const pattern = /(?:leave|time off)[^0-9]*(\d{4}-\d{1,2}-\d{1,2})(?:[^0-9]*to[^0-9]*(\d{4}-\d{1,2}-\d{1,2}))?/i;
     const match = pattern.exec(text);
     if (match) {
@@ -38,14 +37,34 @@ const EmailList = () => {
   }
 
   function findPersonID(text) {
-    const idString = /(?:ID:)[A-Za-z0-9]{9}?/i;
-    const person = idString.exec(text);
-    if (person) {
-      const personID = person[0];
-      return personID;
+    const idString = /ID:([0-9]{6})/i;
+    const match = idString.exec(text);
+    if (match) {
+      return match[1]; // Return just the ID part
     }
     return null;
   }
+
+  const handleSubmit = async ({ personId, startDate, endDate, note }) => {
+    try {
+      await fetch('http://localhost:8000/api/time-offs/leave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          personId,
+          startDate,
+          endDate,
+          note,
+        }),
+      });
+      alert('Time-off request sent successfully');
+    } catch (error) {
+      console.error('Error sending time-off request:', error);
+      alert('Failed to send time-off request');
+    }
+  };
 
   return (
     <div>
@@ -53,9 +72,9 @@ const EmailList = () => {
       <ul>
         {emails.map(email => {
           const snippet = email.snippet || 'No snippet available';
-          const match = findMatch(snippet);
-          const person = findPersonID(snippet);
-          const subject = email.payload?.headers?.find(header => header.name === 'Subject')?.value || 'No Subject';
+          const match = findDates(snippet);
+          const personId = findPersonID(snippet);
+          const subject = email.subject || 'No Subject';
 
           return (
             <li key={email.id} className="p-4">
@@ -65,12 +84,21 @@ const EmailList = () => {
               <br />
               <strong>Dates:</strong> {match ? `Start: ${match.startDate}, End: ${match.endDate}` : ''}
               <br />
-              <strong>Person ID:</strong> {person ? `${person}` : ''}
+              <strong>Person ID:</strong> {personId ? `${personId}` : ''}
+              <br />
+              {match && personId && (
+                <DetailForm
+                  email={email}
+                  personId={personId}
+                  startDate={match.startDate}
+                  endDate={match.endDate}
+                  onSubmit={handleSubmit}
+                />
+              )}
             </li>
           );
         })}
       </ul>
-      <DetailForm />
     </div>
   );
 };
