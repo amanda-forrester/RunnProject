@@ -41,18 +41,20 @@ The Runn Time-Off App is a web application designed to streamline the process of
    ```bash
    API_TOKEN=your_api_token_here
 4. **Create a credentials.json file and add your Gmail API authentication info**:
-   {
-  "web": {
-    "client_id": "your_client_id_here",
-    "project_id": "your_project_id_here",
-    "auth_uri": "your_auth_uri_here",
-    "token_uri": "your_token_uri_here",
-    "auth_provider_x509_cert_url": "your_auth_provider_x509_cert_url_here",
-    "client_secret": "your_client_secret_here",
-    "redirect_uris": ["your_redirect_uris_here"]
-  }
-}
-5. **Start the server**:
+      ```
+         {
+        "web": {
+          "client_id": "your_client_id_here",
+          "project_id": "your_project_id_here",
+          "auth_uri": "your_auth_uri_here",
+          "token_uri": "your_token_uri_here",
+          "auth_provider_x509_cert_url": "your_auth_provider_x509_cert_url_here",
+          "client_secret": "your_client_secret_here",
+          "redirect_uris": ["your_redirect_uris_here"]
+           }
+         }
+      ```
+6. **Start the server**:
    ```bash
    npm run dev
   **Your server should now be running on server http://localhost:8000**
