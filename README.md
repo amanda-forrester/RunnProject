@@ -59,5 +59,9 @@ The Runn Time-Off App is a web application designed to streamline the process of
    npm run dev
   **Your server should now be running on server http://localhost:8000**
 
+## Demo
+
+You can watch a video demo of the app here: https://vimeo.com/954472361/6f01f004d7?share=copy
+
 
 
